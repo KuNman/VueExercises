@@ -1,0 +1,32 @@
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<div id="exercise">
+    <p>{{name}} ({{age}})</p>
+    {{age*3}}
+    <p></p>
+    {{random()}}
+    <p></p>
+    <div>
+        <img style="width:100px;height:100px" v-bind:src="src">
+    </div>
+    <div>
+        <input type="text" v-bind:value="name">
+    </div>
+</div>
+<script>
+
+new Vue({
+	el: '#exercise',
+	data: {
+		name: 'Name',
+		age: 20,
+    src: 'http://qnimate.com/wp-content/uploads/2014/03/images2.jpg'
+	},
+  methods: {
+    random: function(){
+      return Math.random();
+    }
+  }
+})
+
+</script>
