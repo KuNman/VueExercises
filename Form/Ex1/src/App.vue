@@ -26,6 +26,8 @@
                     <!-- Exercise 3 -->
                     <!-- Edit the Example from above and create a custom "Full Name" Control -->
                     <!-- which still holds the First Name and Last Name Input Field -->
+                    <div id="on" @click="isOn = true" :class="{active: isOn}">On</div>
+                    <div id="off" @click="isOn = false" :class="{active: !isOn}">Off</div>
                 </div>
             </div>
         </form>
@@ -41,6 +43,7 @@
                         <p>Mail: {{ user.email }}</p>
                         <p>Password: {{ user.password }}</p>
                         <p>Store in Database?: {{ saveData }}</p>
+                        <p>Switch: {{ isOn }}</p>
                     </div>
                 </div>
             </div>
@@ -60,7 +63,8 @@
             data: [],
           },
           saveData: 'Yes',
-          isFormSubmitted: false
+          isFormSubmitted: false,
+          isOn: true
         }
       },
       methods: {
@@ -72,4 +76,23 @@
 </script>
 
 <style>
+#on, #off {
+    width: 40px;
+    height: 20px;
+    background-color: lightgray;
+    padding: 2px;
+    display: inline-block;
+    margin: 10px -2px;
+    box-sizing: content-box;
+    cursor: pointer;
+    text-align: center;
+}
+
+#on:hover, #on.active {
+    background-color: lightgreen;
+}
+
+#off:hover, #off.active {
+    background-color: lightcoral;
+}
 </style>
