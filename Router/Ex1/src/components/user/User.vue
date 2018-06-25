@@ -10,7 +10,7 @@
   export default {
     methods: {
       backToHome() {
-        this.$router.push('/');
+        this.$router.push({ name: 'home' });
       }
     }
   }
