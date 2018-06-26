@@ -8,7 +8,12 @@ export const routes = [
   { path: '', component: Home, name: 'home' },
   { path: '/user', component: User, children: [
     { path: '', component: UserStart },
-    { path: ':id', component: UserDetail },
+    { path: ':id', component: UserDetail, beforeEnter: (to, from, next) => {
+      console.log('UserDetail middleware');
+      next();
+    } },
     { path: ':id/edit', component: UserEdit, name: 'edit' }
-  ] }
+  ] },
+  { path: '/redirect', redirect: '/user' },
+  { path: '*', redirect: '/' }
 ]
