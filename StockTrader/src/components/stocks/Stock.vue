@@ -9,10 +9,19 @@
       </div>
       <div class="panel-content">
         <div class="pull-left">
-          <input type="number" class="form-control" v-model="quantity" placeholder="Quantity"/>
+          <input
+          type="number"
+          class="form-control"
+          v-model="quantity"
+          placeholder="Quantity"
+          :class="{danger : insufficientFunds}"/>
         </div>
         <div class="pull-right">
-          <button class="btn btn-success" @click="buyStock" :disabled="quantity <= 0">Buy</button>
+          <button
+          class="btn btn-success"
+          @click="buyStock"
+          :disabled="quantity <= 0 || insufficientFunds">{{ insufficientFunds ? 'No money' : 'Buy'}}
+          </button>
         </div>
       </div>
     </div>
@@ -26,11 +35,19 @@
         quantity: 0
       }
     },
+    computed: {
+      funds() {
+        return this.$store.getters.funds;
+      },
+      insufficientFunds() {
+        return this.quantity * this.stock.price > this.funds;
+      }
+    },
     methods: {
       buyStock() {
         const order = {
           stockId: this.stock.id,
-          stockPrice: this.stock.price,
+          price: this.stock.price,
           quantity: this.quantity
         };
         this.$store.dispatch('buyStock', order);
@@ -39,3 +56,8 @@
     }
   }
 </script>
+<style scoped>
+  .danger {
+    border: 1px solid red;
+  }
+</style>

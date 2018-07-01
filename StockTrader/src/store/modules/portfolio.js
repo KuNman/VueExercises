@@ -14,6 +14,8 @@ const mutations = {
         quantity: quantity
       })
     }
+    console.log(price);
+    console.log(quantity);
     state.funds -= price * quantity;
   },
   'SELL_STOCK'(state, {stockId, quantity, price}) {
@@ -24,6 +26,10 @@ const mutations = {
       state.stocks.splice(state.stocks.indexOf(record), 1);
     }
     state.funds += price * quantity;
+  },
+  'SET_PORTFOLIO' (state, portfolio) {
+    state.funds = portfolio.funds;
+    state.stocks = portfolio.stockPortfolio ? portfolio.stockPortfolio : [];
   }
 }
 

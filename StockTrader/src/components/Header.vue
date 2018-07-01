@@ -11,9 +11,10 @@
         <router-link to="/portfolio" activeClass="active" tag="li"><a>Portfolio</a></router-link>
         <router-link to="stocks" activeClass="active" tag="li"><a>Stocks</a></router-link>
       </ul>
+      <strong class="navbar-text navbar-right">Funds: {{ funds | currency }}</strong>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">End day</a></li>
-        <li class="dropdown">
+        <li><a href="#" @click="endDay">End day</a></li>
+        <li class="dropdown" :class="{open : isDropped}" @click="isDropped = !isDropped">
           <a
           href="#"
           class="dropdown-toggle"
@@ -22,8 +23,8 @@
           aria-haspopup="true"
           aria-expanded="false">Save and Load <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Save data</a></li>
-            <li><a href="#">Load data</a></li>
+            <li><a href="#" @click="saveData">Save data</a></li>
+            <li><a href="#" @click="loadData">Load data</a></li>
           </ul>
         </li>
       </ul>
@@ -31,3 +32,39 @@
   </div><!-- /.container-fluid -->
 </nav>
 </template>
+<script>
+  import { mapActions } from 'vuex';
+
+  export default {
+    data() {
+      return {
+        isDropped: false
+      }
+    },
+    computed: {
+      funds() {
+        return this.$store.getters.funds;
+      }
+    },
+    methods: {
+      ...mapActions({
+        randomizeStocks:  'randomizeStocks',
+        fetchData: 'loadData'
+      }),
+      endDay() {
+        this.randomizeStocks();
+      },
+      saveData() {
+        const data = {
+          funds: this.$store.getters.funds,
+          stockPortfolio: this.$store.getters.stockPortfolio,
+          stocks: this.$store.getters.stocks
+        };
+        this.$http.put('vuestocks-ed52d.json', data);
+      },
+      loadData() {
+        return this.fetchData();
+      }
+    }
+  }
+</script>
