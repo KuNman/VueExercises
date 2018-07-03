@@ -69,7 +69,6 @@
 </template>
 
 <script>
-
   export default {
     data () {
       return {
@@ -103,6 +102,7 @@
           hobbies: this.hobbyInputs.map(hobby => hobby.value),
           terms: this.terms
         }
+        console.log(formData)
         this.$store.dispatch('signup', formData)
       }
     }

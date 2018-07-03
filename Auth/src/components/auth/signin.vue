@@ -37,8 +37,8 @@
         const formData = {
           email: this.email,
           password: this.password,
-      }
-      this.$store.dispatch('login', {email: formData.email, password: formData.password})
+        }
+        this.$store.dispatch('login', {email: formData.email, password: formData.password})
       }
     }
   }
