@@ -29,6 +29,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setLogoutTimer({commit}, expirationTime) {
+      setTimeout(() => {
+        commit('clearToken')
+      }, expirationTime * 1000)
+    },
     signup ({commit, dispatch}, authData) {
       axios.post('signupNewUser?key=AIzaSyCdQXl8ycjDWMEV9gtdQTpnqwTVDDapG-w', {
         email: authData.email,
@@ -40,11 +45,17 @@ export default new Vuex.Store({
             token: res.data.idToken,
             userId: res.data.localId
           })
+          const now = new Date()
+          const exp = new Date(now.getTime() + res.data.expiresIn * 1000)
+          localStorage.setItem('token', res.data.idToken)
+          localStorage.setItem('userId', res.data.localId)
+          localStorage.setItem('expiresIn', exp)
           dispatch('storeUser', authData)
+          dispatch('setLogoutTimer', res.data.expiresIn)
         })
         .catch(error => console.log(error))
     },
-    login ({commit}, authData) {
+    login ({commit, dispatch}, authData) {
       axios.post('verifyPassword?key=AIzaSyCdQXl8ycjDWMEV9gtdQTpnqwTVDDapG-w', {
         email: authData.email,
         password: authData.password,
@@ -56,8 +67,23 @@ export default new Vuex.Store({
             userId: res.data.localId,
             user: res.data.email
           })
+          const now = new Date()
+          const exp = new Date(now.getTime() + res.data.expiresIn * 1000)
+          localStorage.setItem('token', res.data.idToken)
+          localStorage.setItem('userId', res.data.localId)
+          localStorage.setItem('expiresIn', exp)
+          dispatch('setLogoutTimer', res.data.expiresIn)
         })
         .catch(error => console.log(error))
+    },
+    autoLogin({commit}) {
+      const token = localStorage.getItem('token')
+      if(!token) return;
+      const expirationDate = localStorage.getItem('expiresIn')
+      const now = new Date();
+      if(now >= expirationDate) return;
+      const userId = localStorage.getItem('userId')
+      commit('authUser', {token: token, userId: userId})
     },
     storeUser ({commit, state}, userData) {
       if (!state.idToken) {
@@ -86,6 +112,9 @@ export default new Vuex.Store({
     },
     logout({commit}) {
       commit('clearToken')
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('expiresIn');
       router.replace('/signin')
     }
   },
